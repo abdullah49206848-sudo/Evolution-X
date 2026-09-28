@@ -1,22 +1,45 @@
+/* =====================================================
+   MOBILE MENU
+===================================================== */
+
 const menuButton = document.getElementById("menuButton");
 
-menuButton.addEventListener("click", () => {
-    document.body.classList.toggle("menu-open");
-});
+const mobileMenu = document.getElementById("mobileMenu");
 
 
-// Close mobile menu when clicking a link
+if (menuButton) {
 
-document.querySelectorAll("a").forEach((link) => {
+    menuButton.addEventListener("click", () => {
 
-    link.addEventListener("click", () => {
-        document.body.classList.remove("menu-open");
+        document.body.classList.toggle("menu-open");
+
     });
 
-});
+}
 
 
-// Simple reveal animation
+document
+    .querySelectorAll(".mobile-menu a")
+    .forEach((link) => {
+
+        link.addEventListener("click", () => {
+
+            document.body.classList.remove("menu-open");
+
+        });
+
+    });
+
+
+
+/* =====================================================
+   SCROLL REVEAL
+===================================================== */
+
+const revealElements = document.querySelectorAll(
+    ".feature-card, .device-card, .showcase-card, .download-box, .about-content, .about-box"
+);
+
 
 const observer = new IntersectionObserver(
     (entries) => {
@@ -25,7 +48,10 @@ const observer = new IntersectionObserver(
 
             if (entry.isIntersecting) {
 
+                entry.target.classList.add("reveal");
                 entry.target.classList.add("visible");
+
+                observer.unobserve(entry.target);
 
             }
 
@@ -38,14 +64,109 @@ const observer = new IntersectionObserver(
 );
 
 
+revealElements.forEach((element) => {
+
+    observer.observe(element);
+
+});
+
+
+
+/* =====================================================
+   NAVBAR SCROLL EFFECT
+===================================================== */
+
+const navbar = document.querySelector(".navbar");
+
+
+window.addEventListener("scroll", () => {
+
+    if (window.scrollY > 30) {
+
+        navbar.style.background =
+            "rgba(5,5,5,0.92)";
+
+    } else {
+
+        navbar.style.background =
+            "rgba(5,5,5,0.72)";
+
+    }
+
+});
+
+
+
+/* =====================================================
+   CLOSE MENU WITH ESC
+===================================================== */
+
+document.addEventListener("keydown", (event) => {
+
+    if (event.key === "Escape") {
+
+        document.body.classList.remove("menu-open");
+
+    }
+
+});
+
+
+
+/* =====================================================
+   SMOOTH ANCHOR OFFSET
+===================================================== */
+
 document
-    .querySelectorAll(
-        ".feature-card, .device-card, .download-box, .about-content"
-    )
-    .forEach((element) => {
+    .querySelectorAll('a[href^="#"]')
+    .forEach((link) => {
 
-        element.classList.add("reveal");
+        link.addEventListener("click", (event) => {
 
-        observer.observe(element);
+            const targetId =
+                link.getAttribute("href");
+
+            if (
+                targetId === "#" ||
+                !targetId
+            ) {
+
+                return;
+
+            }
+
+
+            const target =
+                document.querySelector(targetId);
+
+
+            if (!target) {
+
+                return;
+
+            }
+
+
+            event.preventDefault();
+
+
+            const offset = 75;
+
+
+            const targetPosition =
+                target.getBoundingClientRect().top +
+                window.scrollY -
+                offset;
+
+
+            window.scrollTo({
+
+                top: targetPosition,
+
+                behavior: "smooth"
+
+            });
+
+        });
 
     });
